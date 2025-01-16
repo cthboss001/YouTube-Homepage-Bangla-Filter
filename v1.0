@@ -1,0 +1,57 @@
+// ==UserScript==
+// @name         YouTube Homepage Bangla Filter
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Removes videos with Bangla titles from YouTube homepage
+// @author       cthboss001
+// @match        https://www.youtube.com/
+// @match        https://youtube.com/
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Function to check if text contains Bangla characters
+    function containsBangla(text) {
+        // Bangla Unicode range: \u0980-\u09FF
+        return /[\u0980-\u09FF]/.test(text);
+    }
+
+    // Function to remove Bangla videos
+    function removeBanglaVideos() {
+        // Get all video titles on the page
+        const videoElements = document.querySelectorAll('ytd-rich-grid-media');
+
+        videoElements.forEach(video => {
+            // Get the title element
+            const titleElement = video.querySelector('#video-title');
+
+            if (titleElement && containsBangla(titleElement.textContent)) {
+                // Get the parent container and remove it
+                const container = video.closest('ytd-rich-item-renderer');
+                if (container) {
+                    container.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    // Initial cleanup
+    setTimeout(removeBanglaVideos, 2000);
+
+    // Create an observer to handle dynamically loaded content
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.addedNodes.length) {
+                removeBanglaVideos();
+            }
+        });
+    });
+
+    // Start observing the main content area
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+})();
