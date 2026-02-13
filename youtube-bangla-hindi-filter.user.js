@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Filter out videos with Bangla and Hindi titles on YouTube (Optimized)
-// @author       You
+// @author       cthboss001
 // @match        https://www.youtube.com/*
 // @match        https://youtube.com/*
 // @grant        none
@@ -178,4 +178,5 @@
         console.log('Total video elements:', document.querySelectorAll(VIDEO_SELECTORS.join(',')).length);
     };
     
+
 })();
